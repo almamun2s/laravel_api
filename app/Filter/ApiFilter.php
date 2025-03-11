@@ -14,7 +14,14 @@ class ApiFilter
 
     protected $columnMap = [];
 
-    protected $operatorMap = [];
+    protected $operatorMap = [
+        'eq'  => '=',
+        'lt'  => '<',
+        'lte' => '<=',
+        'gt'  => '>',
+        'gte' => '>=',
+        'ne'  => '!='
+    ];
 
     public function transform(Request $request)
     {

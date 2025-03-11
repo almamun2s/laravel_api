@@ -23,11 +23,4 @@ class CustomerFilter extends ApiFilter
         'postalCode' => 'postal_code'
     ];
 
-    protected $operatorMap = [
-        'eq'  => '=',
-        'lt'  => '<',
-        'lte' => '<=',
-        'gt'  => '>',
-        'gte' => '>=',
-    ];
 }
