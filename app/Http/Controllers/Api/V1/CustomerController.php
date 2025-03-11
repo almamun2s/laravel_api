@@ -19,13 +19,15 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $filter = new CustomerFilter();
-        $queryItems = $filter->transform($request);
+        $filterItems = $filter->transform($request);
+        
+        $includeInvoices = $request->query('includeInvoices');
 
-        if (count($queryItems) == 0) {   
-            return new CustomerCollection(Customer::paginate()); // Can be paginated here.
+        $customers= Customer::where($filterItems);
+        if ($includeInvoices) {
+            $customers->with('invoices');
         }
-        $customer = Customer::where($queryItems)->paginate();
-        return new CustomerCollection($customer->appends($request->query()));
+        return new CustomerCollection($customers->paginate()->appends($request->query()));
     }
 
     /**
