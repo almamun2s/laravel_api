@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Invoice;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Filter\V1\InvoiceFilter;
 use App\Http\Controllers\Controller;
@@ -21,7 +22,7 @@ class InvoiceController extends Controller
         $filter = new InvoiceFilter();
         $queryItems = $filter->transform($request);
 
-        if (count($queryItems) == 0) {   
+        if (count($queryItems) == 0) {
             return new InvoiceCollection(Invoice::paginate()); // Can be paginated here.
         }
         $invoice = Invoice::where($queryItems)->paginate();
@@ -34,6 +35,16 @@ class InvoiceController extends Controller
     public function store(StoreInvoiceRequest $request)
     {
         //
+    }
+
+    public function bulkStore(Request $request)
+    {
+        $bulk = collect($request->all())->map(function ($arr, $key) {
+            return Arr::except($arr, ['customerId', 'billedDate', 'paidDate']);
+        });
+
+        Invoice::insert($bulk->toArray());
+        return response()->json(['message' => 'Data Imported Success']);
     }
 
     /**
